@@ -18,7 +18,6 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
-output: html_document
 bibliography: referen_bib.bib
 link-citations: yes
 csl: apa.csl
