@@ -24,30 +24,10 @@ link-citations: yes
 csl: apa.csl
 ---
 
-``` r
-library(kableExtra)
-```
-
-``` css
-mark { 
-  background-color:  MistyRose;
-  color: black;
-}
-```
-
-<style type="text/css">
-mark { 
-  background-color:  MistyRose;
-  color: black;
-}
-</style>
-
 Once I learnt how to format my reference list in APA format I switched over to RMarkdown for all my word processing because it was convenient to have the code and LaTeX available all in the same place. The process for formatting in APA is different for HTML and PDF so I will show how to do it in PDF another time.
 
-<mark>highlight</mark>
-
 <details>
-Hello
+Hello!
 </details>
 
 To reference in APA format you need two things
@@ -64,7 +44,7 @@ Screenshot
 
 #### Style Guide
 
-The default referencing style in RMarkdown is Chicago. Since we want to use APA, we have to specify the <mark>CSL (Citation Style Language)</mark> file in the metadata.
+The default referencing style in RMarkdown is Chicago. Since we want to use APA, we have to specify the CSL (Citation Style Language) file in the metadata.
 
 ``` r
 ---
@@ -84,7 +64,7 @@ For example, the best language is [R Core Team](#ref-R-base) ([2019](#ref-R-base
 
 `For example, the best language is @R-base.`
 
-To get the BibTex citation for a package, you can use `toBibtex(citation("blogdown"))`
+To get the BibTex citation for a package, you can use
 
 ``` r
 toBibtex(citation("blogdown"))
@@ -107,6 +87,12 @@ toBibtex(citation("blogdown"))
     ##   note = {ISBN 978-0815363729},
     ##   url = {https://bookdown.org/yihui/blogdown/},
     ## }
+
+You can also write multiple package citations straight to the bibliography if you want.
+
+``` r
+knitr::write_bib(c(.packages(), "bookdown"), "packages.bib")
+```
 
 Knitr [Xie](#ref-R-knitr) ([2021](#ref-R-knitr)).  
 RMarkdown [Allaire et al.](#ref-R-rmarkdown) ([2021](#ref-R-rmarkdown)).

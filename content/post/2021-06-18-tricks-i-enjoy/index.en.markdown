@@ -1,0 +1,39 @@
+---
+title: Tricks I Enjoy
+author: R package build
+date: '2021-06-18'
+slug: tricks-i-enjoy
+categories: []
+tags:
+  - R Markdown
+  - CSS
+  - R
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-06-16T19:31:45+10:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```css
+mark { 
+  background-color:  MistyRose;
+  color: black;
+}
+```
+
+
+<style type="text/css">
+mark { 
+  background-color:  MistyRose;
+  color: black;
+}
+</style>
+
+<mark>highlight</mark>
