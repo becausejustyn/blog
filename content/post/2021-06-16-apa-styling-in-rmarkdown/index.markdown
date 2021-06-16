@@ -1,0 +1,31 @@
+---
+title: APA Styling in RMarkdown
+author: R package build
+date: '2021-06-16'
+slug: apa-styling-in-rmarkdown
+categories: []
+tags:
+  - RMarkdown
+  - Markdown
+  - APA
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-06-16T14:39:46+10:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```r
+print("hello dude")
+```
+
+```
+## [1] "hello dude"
+```
+
