@@ -1,0 +1,103 @@
+---
+title: APA Table in Rmarkdown
+author: R package build
+date: '2021-06-16'
+slug: apa-table-in-rmarkdown
+categories: []
+tags:
+  - RMarkdown
+  - Markdown
+  - APA
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-06-16T16:43:30+10:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+APA Table
+
+
+```css
+/** Change border color to black **/
+.table>thead>tr>th {
+  border-color: black;
+}
+
+
+/** Remove borders within the table body **/
+.table>tbody>tr>td {
+  border: none;
+}
+
+
+/** Add a top border to the table header row **/
+.table thead tr:first-child { 
+  border-top: 2px solid black;
+}
+
+
+/** Add a bottom border to the table body **/
+.table tbody tr:last-child {
+  border-bottom: 2px solid black;
+}
+
+
+/** Make the table header row a normal weight; not bold **/
+.table th{
+  font-weight: normal;
+}
+
+
+/** Make the caption italic and black **/
+.table caption{
+  font-style: italic;
+  color: black;
+}
+```
+
+
+```css
+/** Change border color to black **/
+.table>thead>tr>th {
+  border-color: black;
+}
+
+
+/** Remove borders within the table body **/
+.table>tbody>tr>td {
+  border: none;
+}
+
+
+/** Add a top border to the table header row **/
+.table thead tr:first-child { 
+  border-top: 2px solid black;
+}
+
+
+/** Add a bottom border to the table body **/
+.table tbody tr:last-child {
+  border-bottom: 2px solid black;
+}
+
+
+/** Make the table header row a normal weight; not bold **/
+.table th{
+  font-weight: normal;
+}
+
+
+/** Make the caption italic and black **/
+.table caption{
+  font-style: italic;
+  color: black;
+}
+```
+
+`plot(cars)`

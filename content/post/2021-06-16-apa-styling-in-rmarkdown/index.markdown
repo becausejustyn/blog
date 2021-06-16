@@ -18,14 +18,43 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
+bibliography: referen_bib.bib
+link-citations: yes
+csl: apa.csl
 ---
 
+Referencing
 
-```r
-print("hello dude")
+R is pretty fun @R-base
+
+To reference in APA format you need two things
+
+-   bibliography
+
+-   style guide
+
+#### Style Guide
+
+The default referencing style in RMarkdown is Chicago. If you want to use a different style, you need to specify the CSL (Citation Style Language) file in the metadata.
+
+``` r
+---
+title: APA Styling in RMarkdown
+output: html_document
+csl: apa.csl
+bibliography: references.bib
+link-citations: yes
+---
 ```
 
-```
-## [1] "hello dude"
-```
+To find the format, the [Zotero Style Repository](https://www.zotero.org/styles "referencing style formats") allows you to search and download regardless of the style you are looking for. Further, if you want to have a custom style, you can head over to <https://editor.citationstyles.org> to customise the style you want.
 
+#### Bibliography
+
+The bibliography needs to be a BibTex file, which you can create with a referencing tool. I prefer to make it manually[^1] through File ➔ New File ➔ Text file
+
+Screenshot
+
+### References
+
+[^1]: If you make the .bib file manually, make sure to save it in the same folder as your Rmarkdown file, and explicitly specific .bib as the extension.
