@@ -1,5 +1,5 @@
 ---
-title: APA Styling in RMarkdown
+title: APA Styling in RMarkdown HTML
 author: R package build
 date: '2021-06-16'
 slug: apa-styling-in-rmarkdown
@@ -18,14 +18,37 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
+output: html_document
 bibliography: referen_bib.bib
 link-citations: yes
 csl: apa.csl
 ---
 
-Referencing
+``` r
+library(kableExtra)
+```
 
-R is pretty fun @R-base
+``` css
+mark { 
+  background-color:  MistyRose;
+  color: black;
+}
+```
+
+<style type="text/css">
+mark { 
+  background-color:  MistyRose;
+  color: black;
+}
+</style>
+
+Once I learnt how to format my reference list in APA format I switched over to RMarkdown for all my word processing because it was convenient to have the code and LaTeX available all in the same place. The process for formatting in APA is different for HTML and PDF so I will show how to do it in PDF another time.
+
+<mark>highlight</mark>
+
+<details>
+Hello
+</details>
 
 To reference in APA format you need two things
 
@@ -33,14 +56,20 @@ To reference in APA format you need two things
 
 -   style guide
 
+#### Bibliography
+
+The bibliography needs to be a BibTex file, which you can create with a referencing tool. I prefer to make it manually[^1] through `File > New File > Text file`
+
+Screenshot
+
 #### Style Guide
 
-The default referencing style in RMarkdown is Chicago. If you want to use a different style, you need to specify the CSL (Citation Style Language) file in the metadata.
+The default referencing style in RMarkdown is Chicago. Since we want to use APA, we have to specify the <mark>CSL (Citation Style Language)</mark> file in the metadata.
 
 ``` r
 ---
-title: APA Styling in RMarkdown
-output: html_document
+title: "APA Styling in RMarkdown"
+author: "Justyn Rodrigues"
 csl: apa.csl
 bibliography: references.bib
 link-citations: yes
@@ -49,12 +78,63 @@ link-citations: yes
 
 To find the format, the [Zotero Style Repository](https://www.zotero.org/styles "referencing style formats") allows you to search and download regardless of the style you are looking for. Further, if you want to have a custom style, you can head over to <https://editor.citationstyles.org> to customise the style you want.
 
-#### Bibliography
+For the reference list[^2] to population you need to reference a citation from your bibliography by using the @ sign followed by the word input value inside the curly bracket for the specific reference.
 
-The bibliography needs to be a BibTex file, which you can create with a referencing tool. I prefer to make it manually[^1] through File ➔ New File ➔ Text file
+For example, the best language is [R Core Team](#ref-R-base) ([2019](#ref-R-base)).
 
-Screenshot
+`For example, the best language is @R-base.`
+
+To get the BibTex citation for a package, you can use `toBibtex(citation("blogdown"))`
+
+``` r
+toBibtex(citation("blogdown"))
+```
+
+    ## @Manual{,
+    ##   title = {blogdown: Create Blogs and Websites with R Markdown},
+    ##   author = {Yihui Xie and Christophe Dervieux and Alison Presmanes Hill},
+    ##   year = {2021},
+    ##   note = {R package version 1.3},
+    ##   url = {https://github.com/rstudio/blogdown},
+    ## }
+    ## 
+    ## @Book{,
+    ##   title = {blogdown: Creating Websites with {R} Markdown},
+    ##   author = {Yihui Xie and Alison Presmanes Hill and Amber Thomas},
+    ##   publisher = {Chapman and Hall/CRC},
+    ##   address = {Boca Raton, Florida},
+    ##   year = {2017},
+    ##   note = {ISBN 978-0815363729},
+    ##   url = {https://bookdown.org/yihui/blogdown/},
+    ## }
+
+Knitr [Xie](#ref-R-knitr) ([2021](#ref-R-knitr)).  
+RMarkdown [Allaire et al.](#ref-R-rmarkdown) ([2021](#ref-R-rmarkdown)).
 
 ### References
 
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+
+<div id="ref-R-rmarkdown" class="csl-entry">
+
+Allaire, J., Xie, Y., McPherson, J., Luraschi, J., Ushey, K., Atkins, A., Wickham, H., Cheng, J., Chang, W., & Iannone, R. (2021). *Rmarkdown: Dynamic documents for r*.
+
+</div>
+
+<div id="ref-R-base" class="csl-entry">
+
+R Core Team. (2019). *R: A language and environment for statistical computing*. R Foundation for Statistical Computing. <https://www.R-project.org>
+
+</div>
+
+<div id="ref-R-knitr" class="csl-entry">
+
+Xie, Y. (2021). *Knitr: A general-purpose package for dynamic report generation in r*. <https://yihui.org/knitr/>
+
+</div>
+
+</div>
+
 [^1]: If you make the .bib file manually, make sure to save it in the same folder as your Rmarkdown file, and explicitly specific .bib as the extension.
+
+[^2]: The reference list does not having hanging indents.

@@ -1,5 +1,5 @@
 ---
-title: APA Styling in RMarkdown
+title: APA Styling in RMarkdown HTML
 author: R package build
 date: '2021-06-16'
 slug: apa-styling-in-rmarkdown
@@ -18,14 +18,27 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
+output: html_document
 bibliography: referen_bib.bib
 link-citations: yes
 csl: apa.csl
 ---
+```{r}
+library(kableExtra)
+```
 
-Referencing
+```{css}
+mark { 
+  background-color:  MistyRose;
+  color: black;
+}
+```
 
-R is pretty fun \@R-base
+Once I learnt how to format my reference list in APA format I switched over to RMarkdown for all my word processing because it was convenient to have the code and LaTeX available all in the same place. The process for formatting in APA is different for HTML and PDF so I will show how to do it in PDF another time.
+
+<mark>highlight</mark>
+
+<details>Hello</details>
 
 To reference in APA format you need two things
 
@@ -33,14 +46,22 @@ To reference in APA format you need two things
 
 -   style guide
 
+#### Bibliography
+
+The bibliography needs to be a BibTex file, which you can create with a referencing tool. I prefer to make it manually[^1] through `File > New File > Text file`
+
+[^1]: If you make the .bib file manually, make sure to save it in the same folder as your Rmarkdown file, and explicitly specific .bib as the extension.
+
+Screenshot
+
 #### Style Guide
 
-The default referencing style in RMarkdown is Chicago. If you want to use a different style, you need to specify the CSL (Citation Style Language) file in the metadata.
+The default referencing style in RMarkdown is Chicago. Since we want to use APA, we have to specify the <mark>CSL (Citation Style Language)</mark> file in the metadata.
 
-```{r eval=FALSE, include=TRUE}
+```{r eval=FALSE}
 ---
-title: APA Styling in RMarkdown
-output: html_document
+title: "APA Styling in RMarkdown"
+author: "Justyn Rodrigues"
 csl: apa.csl
 bibliography: references.bib
 link-citations: yes
@@ -49,12 +70,21 @@ link-citations: yes
 
 To find the format, the [Zotero Style Repository](https://www.zotero.org/styles "referencing style formats") allows you to search and download regardless of the style you are looking for. Further, if you want to have a custom style, you can head over to <https://editor.citationstyles.org> to customise the style you want.
 
-#### Bibliography
+For the reference list[^2] to population you need to reference a citation from your bibliography by using the @ sign followed by the word input value inside the curly bracket for the specific reference.
 
-The bibliography needs to be a BibTex file, which you can create with a referencing tool. I prefer to make it manually[^1] through File ➔ New File ➔ Text file
+[^2]: The reference list does not having hanging indents.
 
-Screenshot
+For example, the best language is @R-base.
 
-[^1]: If you make the .bib file manually, make sure to save it in the same folder as your Rmarkdown file, and explicitly specific .bib as the extension.
+`For example, the best language is @R-base.`
+
+To get the BibTex citation for a package, you can use `toBibtex(citation("blogdown"))`
+
+```{r}
+toBibtex(citation("blogdown"))
+```
+
+Knitr @R-knitr.  
+RMarkdown @R-rmarkdown.
 
 ### References
