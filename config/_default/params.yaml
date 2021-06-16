@@ -19,7 +19,7 @@ description: ''
 twitter: ''
 
 # Contact (edit or remove options as required)
-
+contact_links:
 - icon: envelope
   icon_pack: fas
   link: justynrodrigues@hotmail.com.au
@@ -32,8 +32,6 @@ twitter: ''
 - icon: github
   icon_pack: fab
   link: https://github.com/becausejustyn
-
-
 
 # Site header
 
