@@ -1,13 +1,13 @@
 ---
-title: APA Styling in RMarkdown HTML
-author: R package build
+title: "APA Styling in RMarkdown HTML"
+author: "R package build"
 date: '2021-06-16'
 slug: apa-styling-in-rmarkdown
 categories: []
 tags:
-  - RMarkdown
-  - Markdown
-  - APA
+- RMarkdown
+- Markdown
+- APA
 subtitle: ''
 summary: ''
 authors: []
@@ -22,6 +22,8 @@ bibliography: referen_bib.bib
 link-citations: yes
 csl: apa.csl
 ---
+**Note:** this page is currently being updated.
+
 Once I learnt how to format my reference list in APA format I switched over to RMarkdown for all my word processing because it was convenient to have the code and LaTeX available all in the same place. The process for formatting in APA is different for HTML and PDF so I will show how to do it in PDF another time.
 
 <details>Hello!</details>
@@ -79,4 +81,11 @@ knitr::write_bib(c(.packages(), "bookdown"), "packages.bib")
 Knitr @R-knitr.  
 RMarkdown @R-rmarkdown.
 
-### References
+# References
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+
+<div id="refs" custom-style="Bibliography"></div>
+\endgroup
