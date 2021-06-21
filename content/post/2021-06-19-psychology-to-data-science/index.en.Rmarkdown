@@ -1,0 +1,31 @@
+---
+title: Psychology to Data Science
+author: R package build
+date: '2021-06-19'
+slug: psychology-to-data-science
+categories: []
+tags:
+  - Psychology
+  - Data Science
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-06-18T12:39:20+10:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+I originally started my undergraduate journey studying exercise science, but after one and a half years I transferred to psychology. What was interesting is that throughout my psychology degree[^1] there were many areas that I found much easier from initially starting in exercise science that do not particularly get as much attention[^2] such as physiology, which was quite helpful when I started learning about cognition. This was quite noticeable when we worked on literature reviews because I had a little bit more freedom to broaden my scope. My favourite task was probably literature reviews because I always enjoyed reading research, however it could be quite overwhelming because there was such a broad range of topics in the field of psychology.
+In this sense I think psychology is very similar to data science. While fundamentally the concepts are not that new,[^3] the fields they are branded under are. One of the challenges of big data is
+
+
+
+
+
+[^1]: Specific to my cohort. I cannot comment on different universities. 
+[^2]: During cognitive psychology units we briefly covered anatomy, but did not go in depth enough to fully grasp how different systems work from a biological perspective.  
+[^3]: Psychology is essentially applied biology, data science is basically applied statistics.

@@ -17,6 +17,7 @@ local_business_type: ''
 org_name: ''
 description: ''
 twitter: ''
+github: ''
 
 # Contact (edit or remove options as required)
 contact_links:
@@ -29,9 +30,10 @@ contact_links:
   icon_pack: fab
   label: Follow me on Twitter
   link: https://twitter.com/becausejustyn
-- icon: github
+  icon: github
   icon_pack: fab
   link: https://github.com/becausejustyn
+  label: My Github
 
 # Site header
 
@@ -57,7 +59,7 @@ highlight_languages:
   - r
   - python
   - latex
-math: false
+math: true
 diagram: false
 privacy_pack: false
 edit_page:

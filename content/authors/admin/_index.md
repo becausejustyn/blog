@@ -24,8 +24,9 @@ social:
   icon_pack: fab
   label: Follow me on Twitter
   link: https://twitter.com/becausejustyn
-- icon: github
+  icon: github
   icon_pack: fab
+  label: My Github
   link: https://github.com/becausejustyn
 superuser: yes
 bio: I am interested in research, sport and statistics.
