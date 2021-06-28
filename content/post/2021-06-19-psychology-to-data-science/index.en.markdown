@@ -17,4 +17,71 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
+bibliography: references.bib
+link-citations: yes
+csl: apa.csl
 ---
+
+I originally started my undergraduate journey studying exercise science, but after one and a half years I transferred to psychology. I felt like the background in exercise science helped a lot, especially when it came to physiology[^1] and topics that do not get as much attention in psychology.
+
+It felt like there was a divide in the field between quantitative vs qualitative, research vs practice (application/clinical) and traditional approaches vs modern approaches. I noticed it was more common to see people favour the qualitative side, so naturally I drifted towards the quantitative perspective.[^2]
+
+At the time I was regularly engaging with scientific literature for leisure between reading articles, for example, ([Goncalves et al., 2017](#ref-Gonalves2017DispellingTM)) and listening to podcasts that break down the literature ([Clinical Athlete](https://www.clinicalathlete.com/), [Stronger by Science](https://www.strongerbyscience.com/podcast/)). I did not realise this at the time, but by regularly engaging with the specific material, I was improving my ability to understand research.
+
+When it came time to tasks that required reviewing the literature I was able to focus on the task instead of how to do the task, reducing the cognitive load ([*Cognitive Load Theory*, 2018](#ref-2018CognitiveLT)). As such, I had more creative freedom to explore topics or articles instead of trying to read the articles and then try to understand them as well as the material. The first time that I really understood how much this helped me was when I was doing research on physical activity for MDD[^3]. The first few papers I read rose some questions, such as strength training being referred to as exercises in the 12-15 rep range, no mention of exercise intensity, or no consideration for enjoyment of the exercise.
+
+It may seem like I was nitpicking, however the two strongest predictors of physical activity adherence is intrinsic motivation (enjoyment) and social ties. In other words, enjoying the exercise and finding ways to make the activity socially engaging. What really caught my attention was when I was reading a review by ([Cooney & Mead, 2013](#ref-Cooney08)). Given everything that we know about the health benefits of physical activity, it felt odd that they were so strong on their stance claiming that exercise was no better than pharmacological treatments[^4].
+
+When going through papers that had cited ([Cooney & Mead, 2013](#ref-Cooney08)), I came across ([Ekkekakis, 2015](#ref-Ekkekakis2015HoneyIS)) which is one of my favourite articles. It is a review of how the methodological approaches used by ([Cooney & Mead, 2013](#ref-Cooney08)) influenced their results, and how changing the inclusion/exclusion criteria completely changes the results.
+
+What was most intriguing was not how the criteria could influence the results, but how many people cited the review without acknowledging it. [Ekkekakis](#ref-Ekkekakis2015HoneyIS) ([2015](#ref-Ekkekakis2015HoneyIS)) believe this could be a case of many people citing the review without reading it just because Cochrane is regarded as a top authority.
+
+I think this is a good example of the reproducibility crisis in psychology ([Baker, 2016](#ref-Baker20161500SL)). When I got started in data science I would regularly see mentions of code reproducibility and open science where the goal was to be as transparent as possible, and this was a breath of fresh air[^5].
+
+This post has gone longer than I expected so I will continue it later on where I gives my thoughts on the similarities between psychology and data science, and how psychology has influenced how I view data science.
+
+### References
+
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+
+<div id="ref-Baker20161500SL" class="csl-entry">
+
+Baker, M. (2016). 1,500 scientists lift the lid on reproducibility. *Nature*, *533*, 452–454.
+
+</div>
+
+<div id="ref-2018CognitiveLT" class="csl-entry">
+
+*Cognitive load theory: Research that teachers really need to understand*. (2018).
+
+</div>
+
+<div id="ref-Cooney08" class="csl-entry">
+
+Cooney, D., GM, & Mead, G. (2013). Exercise for depression. *Cochrane Database of Systematic Reviews*, *9*. <https://doi.org/10.1002/14651858.CD004366.pub6>
+
+</div>
+
+<div id="ref-Ekkekakis2015HoneyIS" class="csl-entry">
+
+Ekkekakis, P. (2015). Honey, i shrunk the pooled SMD! Guide to critical appraisal of systematic reviews and meta-analyses using the cochrane review on exercise for depression as example. *Mental Health and Physical Activity*, *8*, 21–36.
+
+</div>
+
+<div id="ref-Gonalves2017DispellingTM" class="csl-entry">
+
+Goncalves, L., Painelli, V., Yamaguchi, G., Oliveira, L. F., Saunders, B., Silva, R. P. da, Maciel, E., Artioli, G., Roschel, H., & Gualano, B. (2017). Dispelling the myth that habitual caffeine consumption influences the performance response to acute caffeine supplementation. *Journal of Applied Physiology*, *123 1*, 213–220.
+
+</div>
+
+</div>
+
+[^1]: During cognitive psychology units we briefly covered anatomy, but did not go in depth enough to fully grasp how different systems work from a biological perspective.
+
+[^2]: My background in exercise science probably influenced my choices.
+
+[^3]: Major depressive disorder.
+
+[^4]: I am not anti-drug, it just felt odd that physical activity was disregarded that much.
+
+[^5]: I am not bashing psychology, I think every field has challenges of reproducibility. Psychology has different problems due to its history.
