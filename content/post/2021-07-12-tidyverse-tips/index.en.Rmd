@@ -1,13 +1,12 @@
 ---
-title: Tidyverse Tips
-author: R package build
+title: "Tidyverse Tips"
+author: "R package build"
 date: '2021-07-12'
 slug: tidyverse-tips
-categories:
-  - R
+categories: R
 tags:
-  - R
-  - tidyverse
+- R
+- tidyverse
 subtitle: ''
 summary: ''
 authors: []
@@ -19,3 +18,230 @@ image:
   preview_only: no
 projects: []
 ---
+
+These are some tidyverse things that I Google more often than I would like to admit.
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(kableExtra)
+```
+
+The data was originally from Kaggle [^1]. 
+
+```{r reading_data}
+cereal <- read_delim("https://github.com/becausejustyn/blog/raw/main/content/post/2021-07-12-tidyverse-tips/cereal.txt",
+                     delim = "\t", 
+                     col_types = cols(
+                       type = readr::col_factor(levels = NULL),
+                       mfr = readr::col_factor(levels = NULL)
+                       ),
+                     escape_double = FALSE, 
+                     trim_ws = TRUE)
+```
+
+[^1]: https://www.kaggle.com/crawford/80-cereals
+
+```{r}
+cereal %>%
+  kbl() %>%
+  kable_paper() %>%
+  scroll_box(height = "250px", width = "100%")
+```
+
+
+Adding some missing values for later.
+
+```{r adding_missing_values}
+cereal1 <- cereal %>%
+  rowwise() %>% #so sample iterates for each row
+  mutate(
+    kids_rating = sample(c("A", "B", "C", NA), 1, replace = TRUE),
+    adult_rating = sample(c("A", "B", "C", NA), 1, replace = TRUE, prob = c(0.1, 0.3, 0.5, 0.1))
+      )
+```
+
+### Missing Values
+
+-   `across()` is used instead of `_at()`, `_if()` and `_any()`
+
+-   The function inside the `across()` call is referred to as a selection helper, which make life easier once you are comfortable with them.
+
+-   You can use `everything()` to pick all the columns.
+
+-   `~sum()` is similar notation to the `purrr` package.
+
+```{r missing_values_col_colSums}
+cereal1 %>%
+  summarise(across(everything(), 
+                   ~sum(is.na(.)))) %>%
+  colSums() 
+```
+
+`ungroup()` version of above changes the way it is displayed.
+```{r missing_values_col_ungroup}
+cereal1 %>%
+  ungroup() %>%
+  summarise(across(everything(),
+                   ~sum(is.na(.))))
+```
+Missing values in the `adult_rating` column.
+```{r}
+cereal1 %>%
+  filter(if_any(adult_rating, is.na)) %>%
+  kbl() %>%
+  kable_paper() %>%
+  scroll_box(height = "250px", width = "100%")
+```
+
+### Selection Helpers
+
+-   `starts_with()`/`ends_with()`
+
+-   `contains()`
+
+-   `matches()`
+
+-   `everything()`
+
+-   `all_of()`
+
+-   `any_of()`
+
+-   `where()`
+
+`contains()` example.
+```{r selection_helpers_contains}
+cereal1 %>%
+  select(contains("_rating")) 
+```
+
+```{r}
+cereal3 <- cereal1 %>%
+  ungroup()
+```
+
+### Distinct Column Values
+
+You can select multiple columns by putting them in `c()` and then calling `n_distinct`
+
+```{r}
+cereal3 %>%
+  summarise(across(c(mfr, type, kids_rating, adult_rating),
+                   n_distinct))
+```
+
+If you just want to see the values for every column you can use `everything()`
+
+```{r}
+cereal3 %>%
+  summarise(across(everything(),
+                   n_distinct))
+```
+
+Looking for column titles that have a certain string such as a prefix, word or letter you can use `contains()`
+
+```{r}
+cereal3 %>%
+  summarise(across(contains("e"),
+                   n_distinct))
+```
+
+If you only care about a particular data type, such as the numeric columns, you can use `where()` inside the `across()` call.
+
+```{r}
+cereal3 %>%
+  summarise(across(where(is.numeric),
+                   n_distinct))
+```
+
+### Mutate
+
+To create a new column, use `mutate()`
+
+The `case_when()` function was used here to specify multiple conditions. `.after` and `.before` can be used to pick where you want the column located. The default is for the column to be on the far right.
+
+```{r mutate_case_when}
+cereal %>%
+  mutate(
+    calorie_level = case_when(
+      calories < 90 ~ 'Low',
+      between(calories, 90, 110) ~ 'Moderate',
+      calories > 110 ~ 'High'), 
+      .after = calories
+    ) %>%
+  kbl() %>%
+  kable_paper() %>%
+  scroll_box(height = "250px", width = "100%")
+```
+
+Within one `mutate()` call you can create multiple columns with a comma.
+
+```{r}
+set.seed(2017) #reproducibility 
+cereal2 <- cereal %>%
+  rowwise() %>% #so sample iterates for each row
+  mutate(
+    kids_rating = sample(c("A", "B", "C", NA), 1, replace = TRUE),
+    adult_rating = sample(c("A", "B", "C", NA), 1, replace = TRUE, prob = c(0.1, 0.3, 0.5, 0.1))
+      )
+
+cereal2 %>%
+  kbl() %>%
+  kable_paper() %>%
+  scroll_box(height = "250px", width = "100%") #height/width not necessary, keep them for convenience  
+```
+
+To only show the rows without a condition such as missing values we use `filter()` with `!` in front of the value, e.g. `is.na()`
+
+```{r}
+cereal2 %>%
+  filter(!is.na(adult_rating)) %>%
+  kbl() %>%
+  kable_paper() %>%
+  scroll_box(height = "250px", width = "100%")
+```
+
+### Negative Values
+
+```{r}
+cereal2 %>%
+  rowwise() %>%
+  mutate(random_values = runif(1, min = -1, max = 1), .after = name) %>%
+  kbl() %>%
+  kable_paper() %>%
+  scroll_box(height = "250px", width = "100%") 
+```
+
+```{r warning=FALSE}
+cereal2 %>%
+  rowwise() %>%
+  mutate(random_values = runif(1, min = -1, max = 1), .after = name) %>%
+  filter(if_any(everything(), ~ . < 0)) %>%
+  kbl() %>%
+  kable_paper() %>%
+  scroll_box(height = "250px", width = "100%") 
+```
+
+Here we do the same thing except we only filter numeric columns for the formula call.
+
+```{r warning=FALSE}
+#Find all rows where any numeric variable is less than zero
+cereal2 %>%
+  rowwise() %>%
+  mutate(random_values = runif(1, min = -1, max = 1), .after = name) %>%
+  filter(if_any(where(is.numeric), ~ .x < 0)) %>%
+  kbl() %>%
+  kable_paper() %>%
+  scroll_box(height = "250px", width = "100%") 
+```
+
+### %in% operator
+
+```{r}
+cereal2 %>%
+  ungroup() %>%
+  filter(protein %in% c(3, 4)) %>%
+  kbl() %>%
+  kable_paper() %>%
+  scroll_box(height = "250px", width = "100%") 
+```
