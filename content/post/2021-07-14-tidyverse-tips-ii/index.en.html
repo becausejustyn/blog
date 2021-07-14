@@ -1,0 +1,214 @@
+---
+title: "Tidyverse Tips II"
+author: "R package build"
+date: '2021-07-14'
+slug: tidyverse-tips-ii
+categories: R
+tags:
+- tidyverse
+- R
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-07-14T20:10:35+10:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="{{< blogdown/postref >}}index.en_files/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code>library(tidyverse)
+library(ggplot2)</code></pre>
+<pre class="r"><code>midwest &lt;- tibble::as_tibble(midwest)</code></pre>
+<div id="selecting-columns" class="section level4">
+<h4>Selecting Columns</h4>
+<pre class="r"><code>midwest %&gt;%
+  select(county, starts_with(&quot;A&quot;)) %&gt;%
+  head()</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   county     area
+##   &lt;chr&gt;     &lt;dbl&gt;
+## 1 ADAMS     0.052
+## 2 ALEXANDER 0.014
+## 3 BOND      0.022
+## 4 BOONE     0.017
+## 5 BROWN     0.018
+## 6 BUREAU    0.05</code></pre>
+</div>
+<div id="selecting-columns-regex" class="section level4">
+<h4>Selecting Columns (Regex)</h4>
+<p><code>matches()</code> here results all columns that have the letter p followed by more than one letter that also contain the letter n.</p>
+<pre class="r"><code>midwest %&gt;%
+  select(matches(&quot;p.+n&quot;)) %&gt;%
+  head()</code></pre>
+<pre><code>## # A tibble: 6 x 7
+##   popdensity popamerindian popasian percamerindan percasian poppovertyknown
+##        &lt;dbl&gt;         &lt;int&gt;    &lt;int&gt;         &lt;dbl&gt;     &lt;dbl&gt;           &lt;int&gt;
+## 1      1271.            98      249         0.148    0.377            63628
+## 2       759             19       48         0.179    0.452            10529
+## 3       681.            35       16         0.233    0.107            14235
+## 4      1812.            46      150         0.149    0.487            30337
+## 5       324.            14        5         0.240    0.0857            4815
+## 6       714.            65      195         0.182    0.546            35107
+## # … with 1 more variable: percpovertyknown &lt;dbl&gt;</code></pre>
+</div>
+<div id="reformatting-all-column-names" class="section level4">
+<h4>Reformatting All Column Names</h4>
+<pre class="r"><code>midwest %&gt;%
+  select_all(toupper) #could also use tolower()</code></pre>
+<pre><code>## # A tibble: 437 x 28
+##      PID COUNTY  STATE  AREA POPTOTAL POPDENSITY POPWHITE POPBLACK POPAMERINDIAN
+##    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt;    &lt;int&gt;      &lt;dbl&gt;    &lt;int&gt;    &lt;int&gt;         &lt;int&gt;
+##  1   561 ADAMS   IL    0.052    66090      1271.    63917     1702            98
+##  2   562 ALEXAN… IL    0.014    10626       759      7054     3496            19
+##  3   563 BOND    IL    0.022    14991       681.    14477      429            35
+##  4   564 BOONE   IL    0.017    30806      1812.    29344      127            46
+##  5   565 BROWN   IL    0.018     5836       324.     5264      547            14
+##  6   566 BUREAU  IL    0.05     35688       714.    35157       50            65
+##  7   567 CALHOUN IL    0.017     5322       313.     5298        1             8
+##  8   568 CARROLL IL    0.027    16805       622.    16519      111            30
+##  9   569 CASS    IL    0.024    13437       560.    13384       16             8
+## 10   570 CHAMPA… IL    0.058   173025      2983.   146506    16559           331
+## # … with 427 more rows, and 19 more variables: POPASIAN &lt;int&gt;, POPOTHER &lt;int&gt;,
+## #   PERCWHITE &lt;dbl&gt;, PERCBLACK &lt;dbl&gt;, PERCAMERINDAN &lt;dbl&gt;, PERCASIAN &lt;dbl&gt;,
+## #   PERCOTHER &lt;dbl&gt;, POPADULTS &lt;int&gt;, PERCHSD &lt;dbl&gt;, PERCOLLEGE &lt;dbl&gt;,
+## #   PERCPROF &lt;dbl&gt;, POPPOVERTYKNOWN &lt;int&gt;, PERCPOVERTYKNOWN &lt;dbl&gt;,
+## #   PERCBELOWPOVERTY &lt;dbl&gt;, PERCCHILDBELOWPOVERT &lt;dbl&gt;, PERCADULTPOVERTY &lt;dbl&gt;,
+## #   PERCELDERLYPOVERTY &lt;dbl&gt;, INMETRO &lt;int&gt;, CATEGORY &lt;chr&gt;</code></pre>
+</div>
+<div id="cleaning-column-names" class="section level3">
+<h3>Cleaning Column Names</h3>
+<pre class="r"><code>#making an unclean database:
+midwest2 &lt;- midwest %&gt;%
+  select(poptotal, popother, county, percbelowpoverty, category)
+
+colnames(midwest2) &lt;- c(&quot;pop total&quot;, &quot;pop other&quot;, &quot;county&quot;, &quot;perc below poverty&quot;, &quot;category&quot;)
+
+
+midwest2 %&gt;%
+  select_all(~str_replace(., &quot; &quot;, &quot;_&quot;))</code></pre>
+<pre><code>## # A tibble: 437 x 5
+##    pop_total pop_other county    `perc_below poverty` category
+##        &lt;int&gt;     &lt;int&gt; &lt;chr&gt;                    &lt;dbl&gt; &lt;chr&gt;   
+##  1     66090       124 ADAMS                    13.2  AAR     
+##  2     10626         9 ALEXANDER                32.2  LHR     
+##  3     14991        34 BOND                     12.1  AAR     
+##  4     30806      1139 BOONE                     7.21 ALU     
+##  5      5836         6 BROWN                    13.5  AAR     
+##  6     35688       221 BUREAU                   10.4  AAR     
+##  7      5322         0 CALHOUN                  15.1  LAR     
+##  8     16805        84 CARROLL                  11.7  AAR     
+##  9     13437         6 CASS                     13.9  AAR     
+## 10    173025      1596 CHAMPAIGN                15.6  HAU     
+## # … with 427 more rows</code></pre>
+</div>
+<div id="filtering" class="section level3">
+<h3>Filtering</h3>
+<p>You can use <code>near()</code> with the tolerance argument to find values close to a certain number.</p>
+<pre class="r"><code>midwest %&gt;%
+  select(county, poptotal) %&gt;%
+  filter(near(
+    poptotal, 96000, tol = 15000
+    ))</code></pre>
+<pre><code>## # A tibble: 26 x 2
+##    county    poptotal
+##    &lt;chr&gt;        &lt;int&gt;
+##  1 KANKAKEE     96255
+##  2 LA SALLE    106913
+##  3 VERMILION    88257
+##  4 CLARK        87777
+##  5 HAMILTON    108936
+##  6 JOHNSON      88109
+##  7 LA PORTE    107066
+##  8 MONROE      108978
+##  9 VIGO        106107
+## 10 ALLEGAN      90509
+## # … with 16 more rows</code></pre>
+<p>If you want to filter your rows on multiple values, you can use the <code>%in%</code> operator.</p>
+<pre class="r"><code>midwest %&gt;%
+  select(poptotal, popother, county, percbelowpoverty, category) %&gt;%
+  filter(county %in% c(&quot;IOWA&quot;, &quot;JERSEY&quot;, &quot;PARKE&quot;, &quot;FULTON&quot;))</code></pre>
+<pre><code>## # A tibble: 6 x 5
+##   poptotal popother county percbelowpoverty category
+##      &lt;int&gt;    &lt;int&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;   
+## 1    38080      107 FULTON            15.5  AAR     
+## 2    20539       22 JERSEY             9.74 AAU     
+## 3    18840       51 FULTON            10.3  AAR     
+## 4    15410       12 PARKE             12.2  AAR     
+## 5    38498     1109 FULTON             6.23 ALU     
+## 6    20150       10 IOWA               9.99 HAR</code></pre>
+<p>To return all rows where only one condition is met you can use <code>xor()</code> from base.</p>
+<pre class="r"><code>midwest %&gt;%
+  filter(xor(popother &lt; 80, percbelowpoverty &gt; 15))</code></pre>
+<pre><code>## # A tibble: 189 x 28
+##      PID county  state  area poptotal popdensity popwhite popblack popamerindian
+##    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt;    &lt;int&gt;      &lt;dbl&gt;    &lt;int&gt;    &lt;int&gt;         &lt;int&gt;
+##  1   563 BOND    IL    0.022    14991       681.    14477      429            35
+##  2   565 BROWN   IL    0.018     5836       324.     5264      547            14
+##  3   569 CASS    IL    0.024    13437       560.    13384       16             8
+##  4   570 CHAMPA… IL    0.058   173025      2983.   146506    16559           331
+##  5   571 CHRIST… IL    0.042    34418       819.    34176       82            51
+##  6   572 CLARK   IL    0.03     15921       531.    15842       10            26
+##  7   575 COLES   IL    0.03     51644      1721.    50177      925            92
+##  8   577 CRAWFO… IL    0.026    19464       749.    19300       63            34
+##  9   578 CUMBER… IL    0.02     10670       534.    10627        5             6
+## 10   580 DE WITT IL    0.023    16516       718.    16387       25            37
+## # … with 179 more rows, and 19 more variables: popasian &lt;int&gt;, popother &lt;int&gt;,
+## #   percwhite &lt;dbl&gt;, percblack &lt;dbl&gt;, percamerindan &lt;dbl&gt;, percasian &lt;dbl&gt;,
+## #   percother &lt;dbl&gt;, popadults &lt;int&gt;, perchsd &lt;dbl&gt;, percollege &lt;dbl&gt;,
+## #   percprof &lt;dbl&gt;, poppovertyknown &lt;int&gt;, percpovertyknown &lt;dbl&gt;,
+## #   percbelowpoverty &lt;dbl&gt;, percchildbelowpovert &lt;dbl&gt;, percadultpoverty &lt;dbl&gt;,
+## #   percelderlypoverty &lt;dbl&gt;, inmetro &lt;int&gt;, category &lt;chr&gt;</code></pre>
+<p>Return all rows where <code>popother</code> is less than <span class="math inline">\(80\)</span>, but <code>percbelowpoverty</code> does not exceed <span class="math inline">\(15%\)</span>.</p>
+<pre class="r"><code>midwest %&gt;%
+  filter(popother &lt; 80, !percbelowpoverty &gt; 15)</code></pre>
+<pre><code>## # A tibble: 153 x 28
+##      PID county  state  area poptotal popdensity popwhite popblack popamerindian
+##    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt;    &lt;int&gt;      &lt;dbl&gt;    &lt;int&gt;    &lt;int&gt;         &lt;int&gt;
+##  1   563 BOND    IL    0.022    14991       681.    14477      429            35
+##  2   565 BROWN   IL    0.018     5836       324.     5264      547            14
+##  3   569 CASS    IL    0.024    13437       560.    13384       16             8
+##  4   571 CHRIST… IL    0.042    34418       819.    34176       82            51
+##  5   572 CLARK   IL    0.03     15921       531.    15842       10            26
+##  6   577 CRAWFO… IL    0.026    19464       749.    19300       63            34
+##  7   578 CUMBER… IL    0.02     10670       534.    10627        5             6
+##  8   580 DE WITT IL    0.023    16516       718.    16387       25            37
+##  9   584 EDWARDS IL    0.014     7440       531.     7401        6             8
+## 10   585 EFFING… IL    0.028    31704      1132.    31523       12            45
+## # … with 143 more rows, and 19 more variables: popasian &lt;int&gt;, popother &lt;int&gt;,
+## #   percwhite &lt;dbl&gt;, percblack &lt;dbl&gt;, percamerindan &lt;dbl&gt;, percasian &lt;dbl&gt;,
+## #   percother &lt;dbl&gt;, popadults &lt;int&gt;, perchsd &lt;dbl&gt;, percollege &lt;dbl&gt;,
+## #   percprof &lt;dbl&gt;, poppovertyknown &lt;int&gt;, percpovertyknown &lt;dbl&gt;,
+## #   percbelowpoverty &lt;dbl&gt;, percchildbelowpovert &lt;dbl&gt;, percadultpoverty &lt;dbl&gt;,
+## #   percelderlypoverty &lt;dbl&gt;, inmetro &lt;int&gt;, category &lt;chr&gt;</code></pre>
+</div>
+<div id="counting" class="section level3">
+<h3>Counting</h3>
+<p>The <code>count()</code> function has a sort argument.</p>
+<pre class="r"><code>midwest %&gt;%
+  count(category, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 16 x 2
+##    category     n
+##    &lt;chr&gt;    &lt;int&gt;
+##  1 AAR        193
+##  2 AAU         77
+##  3 LAR         30
+##  4 LHR         28
+##  5 HLU         26
+##  6 ALU         20
+##  7 HAU         20
+##  8 AHR         16
+##  9 ALR         11
+## 10 HAR          6
+## 11 LAU          3
+## 12 HLR          2
+## 13 LHU          2
+## 14 AHU          1
+## 15 HHR          1
+## 16 HHU          1</code></pre>
+</div>

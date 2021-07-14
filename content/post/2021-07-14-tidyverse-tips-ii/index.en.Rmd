@@ -10,7 +10,7 @@ tags:
 subtitle: ''
 summary: ''
 authors: []
-lastmod: '2021-07-14T20:03:47+10:00'
+lastmod: '2021-07-14T20:10:35+10:00'
 featured: no
 image:
   caption: ''
@@ -19,7 +19,7 @@ image:
 projects: []
 ---
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(tidyverse)
 library(ggplot2)
 ```
