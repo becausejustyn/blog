@@ -1,0 +1,267 @@
+---
+title: Barplots
+author: R package build
+date: '2022-02-11'
+slug: barplots
+categories:
+  - R
+tags:
+  - plot
+  - tidyverse
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2022-02-11T23:03:24+11:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="{{< blogdown/postref >}}index.en_files/header-attrs/header-attrs.js"></script>
+
+
+<p>I have been planning on writing a post for a few weeks, but I keep changing my mind on what I want to write about. I have been going through my Github profile lately and tidying it up. It has made me realise how much code I had stashed away that I did not need, so I am trying to get into the habit of only keeping code that is available on Github to keep organised and accountable.</p>
+<p>I have also been doing a lot of NFL data viz, which I found a lot harder than I thought it would be. I’ll share them at a later date, but I thought I would do a quick post at 11pm at some tricks I learnt with using text labels. I thought I would use the penguins dataset from <code>palmerpenguins</code> since it does not appear to be as common as others such as <code>mtcars</code>.</p>
+<pre class="r"><code>library(palmerpenguins)
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
+## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
+## ✓ readr   2.1.2     ✓ forcats 0.5.1</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(janitor)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;janitor&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     chisq.test, fisher.test</code></pre>
+<pre class="r"><code>library(gt)
+library(becausejustynfun) #personal package with plotting theme
+
+penguins &lt;- palmerpenguins::penguins</code></pre>
+<p>Even though I am using the cleaned version, I find it good practice to use <code>glimpse()</code> just to be safe.</p>
+<pre class="r"><code>penguins %&gt;% glimpse()</code></pre>
+<pre><code>## Rows: 344
+## Columns: 8
+## $ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+## $ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+## $ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, …
+## $ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
+## $ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
+## $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
+## $ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
+## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</code></pre>
+<p>Next, I am checking for missing values.</p>
+<pre class="r"><code>#penguins %&gt;%
+#  summarise(across(everything(), ~sum(is.na(.))))
+
+penguins %&gt;% map_dbl(~sum(is.na(.)))</code></pre>
+<pre><code>##           species            island    bill_length_mm     bill_depth_mm 
+##                 0                 0                 2                 2 
+## flipper_length_mm       body_mass_g               sex              year 
+##                 2                 2                11                 0</code></pre>
+<p>To see how I will deal with them I like to see the unique values across each column.</p>
+<pre class="r"><code>#penguins %&gt;%
+#  summarise(across(everything(), n_distinct))
+
+penguins %&gt;% 
+  map_dbl(~n_distinct(.))</code></pre>
+<pre><code>##           species            island    bill_length_mm     bill_depth_mm 
+##                 3                 3               165                81 
+## flipper_length_mm       body_mass_g               sex              year 
+##                56                95                 3                 3</code></pre>
+<p>I’ll have a glance at the missing values to see if they are important.</p>
+<pre class="r"><code>penguins %&gt;% 
+  filter(if_any(everything(), is.na)) </code></pre>
+<pre><code>## # A tibble: 11 × 8
+##    species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+##  1 Adelie  Torgersen           NA            NA                  NA          NA
+##  2 Adelie  Torgersen           34.1          18.1               193        3475
+##  3 Adelie  Torgersen           42            20.2               190        4250
+##  4 Adelie  Torgersen           37.8          17.1               186        3300
+##  5 Adelie  Torgersen           37.8          17.3               180        3700
+##  6 Adelie  Dream               37.5          18.9               179        2975
+##  7 Gentoo  Biscoe              44.5          14.3               216        4100
+##  8 Gentoo  Biscoe              46.2          14.4               214        4650
+##  9 Gentoo  Biscoe              47.3          13.8               216        4725
+## 10 Gentoo  Biscoe              44.5          15.7               217        4875
+## 11 Gentoo  Biscoe              NA            NA                  NA          NA
+## # … with 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+<p>Given the <code>NA</code> values were low, I will just drop them.</p>
+<pre class="r"><code>penguins &lt;- penguins %&gt;%
+  na.exclude()
+
+#to check
+map_dfc(penguins, sum(is.na(penguins)))</code></pre>
+<pre><code>## # A tibble: 0 × 0</code></pre>
+<pre class="r"><code>#map_df(penguins, .f = sum(is.na(penguins)))</code></pre>
+<p>I am going to create a seperate df with the count values. You can easily just use <code>add_count()</code>, or just rely on <code>ggplot2</code> to do that for you, but later on we are going to make more adjustments to the df that will make it easier if there is a mistake.</p>
+<pre class="r"><code>#df of counts
+penguins_sum &lt;- penguins %&gt;%
+  count(species, sort = TRUE) %&gt;% 
+  mutate(
+    species = fct_rev(fct_inorder(species)),
+    perc = paste0(sprintf(&quot;%4.1f&quot;, n / sum(n) * 100), &quot;%&quot;) #percentage label
+    )
+
+#scales alternative
+#mutate(perc = scales::percent(n / sum(n), accuracy = .1, trim = FALSE))</code></pre>
+<pre class="r"><code>penguins_sum %&gt;%
+ggplot(aes(x = n, y = species)) +
+  geom_col(fill = &quot;gray70&quot;) +
+  ## add percentage labels
+  geom_text(aes(label = perc)) +
+  white_theme()</code></pre>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>## prepare non-aggregated data set with lumped and ordered factors
+penguins_fct &lt;- penguins %&gt;% 
+  dplyr::mutate(
+    total = dplyr::n(),
+    species = stringr::str_to_title(species),
+    species = forcats::fct_rev(forcats::fct_infreq(species))
+  )
+
+penguins_sum &lt;- penguins_sum %&gt;% 
+  mutate(
+    colour = case_when(
+      row_number() == 1 ~ &quot;#468499&quot;,
+      row_number() == 2 ~ &quot;#E697AC&quot;,
+      row_number() == 3 ~ &quot;#81CDE6&quot;,
+      ## all others should be gray
+      TRUE ~ &quot;gray70&quot;
+    )
+  )</code></pre>
+<p>This is one approach were we conditionally colour each variable of choice.</p>
+<pre class="r"><code>penguins_sum %&gt;%
+  ggplot(aes(
+    x = n, 
+    y = species, 
+    fill = colour)) +
+  geom_col() +
+  geom_text(
+    aes(label = perc),
+    hjust = 1, nudge_x = -.5
+  ) +
+  ## add custom colors
+  scale_fill_identity(guide = &quot;none&quot;) +
+  white_theme()</code></pre>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>We also have a lot of control over the font used. There can be challenges when installing a font onto your system for the first time, but I might go through that another time since I struggled with it for quite a while. Maybe I am just a silly billy.</p>
+<pre class="r"><code>penguins_sum %&gt;%
+ggplot(aes(
+  x = n, 
+  y = species, 
+  fill = colour)) +
+  geom_col() +
+  geom_text(
+    aes(label = perc), 
+    hjust = 1, nudge_x = -.5,
+    size = 4, fontface = &quot;bold&quot;, family = &quot;Fira Sans&quot;
+  ) +
+  ## reduce spacing between labels and bars
+  scale_x_continuous(expand = c(.01, .01)) +
+  scale_fill_identity(guide = &quot;none&quot;) +
+  white_theme() </code></pre>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Sometimes the colour of the font does not match well with the plot. This can be challenging when you have more than a few colours, so you might not want to manually adjust every single one. One option is to add white to the label with <code>fill = "white"</code>.</p>
+<pre class="r"><code>penguins_sum %&gt;%
+  ggplot(aes(
+    x = n, 
+    y = species, 
+    fill = colour)) +
+  geom_col() +
+  geom_label(
+    aes(label = perc), 
+    hjust = 0.95, nudge_x = -.5,
+    size = 4, fontface = &quot;bold&quot;,
+    ## turn into white box without outline
+    fill = &quot;white&quot;, label.size = 0
+  ) +
+  scale_x_continuous(expand = c(.01, .01)) +
+  scale_fill_identity(guide = &quot;none&quot;) +
+  white_theme() +
+  theme(
+    axis.text.y = element_text(size = 14, hjust = 1, family = &quot;Fira Sans&quot;),
+    plot.margin = margin(rep(15, 4))
+  )</code></pre>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Likewise, it is possible to adjust the position of the text labels conditionally. I think <code>ggplot2</code> biggest challenge is learning what you can do.</p>
+<pre class="r"><code>penguins_sum %&gt;% 
+  mutate(
+    ## set justification based on data 
+    ## so that only the first label is placed inside
+    place = if_else(row_number() == 1, 1, 0),
+    ## add some spacing to labels since we cant use nudge_x anymore
+    perc = paste(&quot; &quot;, perc, &quot; &quot;)
+  ) %&gt;% 
+  ggplot(aes(
+    x = n, 
+    y = species, 
+    fill = colour)) +
+  geom_col() +
+  geom_text(
+    aes(label = perc, hjust = place), 
+    fontface = &quot;bold&quot;
+  ) +
+  scale_x_continuous(expand = c(.01, .01)) +
+  scale_fill_identity(guide = &quot;none&quot;) +
+  white_theme() +
+  theme(
+    plot.margin = margin(rep(15, 4))
+  )</code></pre>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>You can use different positions of text labels to highlight things of interest, or sometimes adjusting it makes it easier to work around other features of the plot such as the background or legend.</p>
+<p>That is all for today. I’ll try to post next week about more data viz.</p>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 4.1.2 (2021-11-01)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur 10.16
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_AU.UTF-8/en_AU.UTF-8/en_AU.UTF-8/C/en_AU.UTF-8/en_AU.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] becausejustynfun_0.0.0.9000 gt_0.3.1                   
+##  [3] janitor_2.1.0               forcats_0.5.1              
+##  [5] stringr_1.4.0               dplyr_1.0.8                
+##  [7] purrr_0.3.4                 readr_2.1.2                
+##  [9] tidyr_1.2.0                 tibble_3.1.6               
+## [11] ggplot2_3.3.5               tidyverse_1.3.1            
+## [13] palmerpenguins_0.1.0       
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.8             lubridate_1.8.0        assertthat_0.2.1      
+##  [4] digest_0.6.29          utf8_1.2.2             R6_2.5.1              
+##  [7] cellranger_1.1.0       backports_1.4.1        reprex_2.0.1          
+## [10] evaluate_0.14          highr_0.9              httr_1.4.2            
+## [13] blogdown_1.7           pillar_1.7.0           rlang_1.0.1           
+## [16] readxl_1.3.1           rstudioapi_0.13.0-9000 jquerylib_0.1.4       
+## [19] rmarkdown_2.11         labeling_0.4.2         munsell_0.5.0         
+## [22] broom_0.7.12           compiler_4.1.2         modelr_0.1.8          
+## [25] xfun_0.29.1            pkgconfig_2.0.3        htmltools_0.5.2       
+## [28] tidyselect_1.1.1       bookdown_0.24          fansi_1.0.2           
+## [31] crayon_1.4.2           tzdb_0.2.0             dbplyr_2.1.1          
+## [34] withr_2.4.3            grid_4.1.2             jsonlite_1.7.3        
+## [37] gtable_0.3.0           lifecycle_1.0.1        DBI_1.1.2             
+## [40] magrittr_2.0.2         scales_1.1.1           cli_3.1.1             
+## [43] stringi_1.7.6          farver_2.1.0           fs_1.5.2              
+## [46] snakecase_0.11.0       xml2_1.3.3             bslib_0.3.1           
+## [49] ellipsis_0.3.2         generics_0.1.2         vctrs_0.3.8           
+## [52] tools_4.1.2            glue_1.6.1             hms_1.1.1             
+## [55] fastmap_1.1.0          yaml_2.2.2             colorspace_2.0-2      
+## [58] rvest_1.0.2            knitr_1.37             haven_2.4.3           
+## [61] sass_0.4.0</code></pre>
