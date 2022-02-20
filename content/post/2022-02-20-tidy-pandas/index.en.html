@@ -1,0 +1,881 @@
+---
+title: Tidy Pandas
+author: R package build
+date: '2022-02-20'
+slug: tidy-pandas
+categories:
+  - R
+tags:
+  - R
+  - tidyverse
+  - pandas
+  - python
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2022-02-20T16:52:19+11:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+output: 
+  html_document: 
+    toc: yes
+    self_contained: no
+---
+
+<script src="{{< blogdown/postref >}}index.en_files/header-attrs/header-attrs.js"></script>
+
+
+<p>Uni starts back up soon so I thought it would be a good idea to brush up on my <code>python</code>. I have avoided using <code>python</code> since <code>R</code> is much more user friendly between <code>dplyr</code> and <code>ggplot2</code>. Now that RStudio has <code>python</code> computability via <code>reticulate</code> there is not really a good reason to completely avoid <code>python</code>. I think it is always good practice to get more comfortable with different languages, because sometimes you will need to do a task that is only available using a specific tool. Similarly, there are times when a group project works best when everybody is able to use a similar language.</p>
+<p>As tempting as it might be to do all my data wrangling via <code>tidyverse</code>, I have been practising using pandas. This post was entirely written in RStudio, however, the <code>python</code> code will run in a notebook alternative such as Jupyter or VS Code.</p>
+<div id="installing-packages" class="section level3 tabset tabset-fade tabset-pills">
+<h3>Installing Packages</h3>
+<div id="r" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>install.packages(&quot;ggplot2&quot;)
+install.packages(&quot;dplyr&quot;)
+install.packages(&quot;purrr&quot;)
+
+#or simply
+install.packages(&quot;tidyverse&quot;)</code></pre>
+</div>
+<div id="python" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>!pip3 install seaborn
+!pip3 install numpy
+!pip3 install pandas
+
+#You can also install these packages in the terminal 
+pip3 install seaborn
+pip3 install numpy
+pip3 install pandas</code></pre>
+<p>Learning <code>python</code> was overwhelming because you use the terminal much more often than you need to when using <code>R</code>. Over time, I have began to appreciate using a virtual environment because you can easily run multiple versions of <code>python</code>, which makes it more practical when you are using a package that requires an older version.</p>
+</div>
+</div>
+<div id="importing-data-loading-libraries" class="section level3 tabset tabset-fade tabset-pills">
+<h3>Importing Data, Loading Libraries</h3>
+<p>I have hidden the output of the code, however, you can view it by clicking the dropdown menu. I did this primarily for myself so it was easier to scroll down, but I think it is also more practical since the output is not necessarily the focus of this post.</p>
+<div id="r-1" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>library(dplyr)
+library(ggplot2)
+
+df &lt;- diamonds
+
+df %&gt;% head()</code></pre>
+<pre><code>## # A tibble: 6 × 10
+##   carat cut       color clarity depth table price     x     y     z
+##   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43
+## 2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+## 3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31
+## 4  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63
+## 5  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75
+## 6  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48</code></pre>
+</div>
+<div id="python-1" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>import seaborn as sns
+import numpy as np
+import pandas as pd
+sns.set_style(&#39;white&#39;)
+
+df = sns.load_dataset(&#39;diamonds&#39;)
+
+df.head()</code></pre>
+<pre><code>##    carat      cut color clarity  depth  table  price     x     y     z
+## 0   0.23    Ideal     E     SI2   61.5   55.0    326  3.95  3.98  2.43
+## 1   0.21  Premium     E     SI1   59.8   61.0    326  3.89  3.84  2.31
+## 2   0.23     Good     E     VS1   56.9   65.0    327  4.05  4.07  2.31
+## 3   0.29  Premium     I     VS2   62.4   58.0    334  4.20  4.23  2.63
+## 4   0.31     Good     J     SI2   63.3   58.0    335  4.34  4.35  2.75</code></pre>
+</div>
+</div>
+<div id="example-of-functions" class="section level3 tabset tabset-fade tabset-pills">
+<h3>Example of Functions</h3>
+<div id="verbs" class="section level4">
+<h4>Verbs</h4>
+<table>
+<thead>
+<tr class="header">
+<th align="right">dplyr</th>
+<th align="right">pandas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right"><code>filter()</code> and <code>slice()</code></td>
+<td align="right"><code>query()</code> and <code>loc[]</code>, <code>iloc[]</code></td>
+</tr>
+<tr class="even">
+<td align="right"><code>arrange()</code></td>
+<td align="right"><code>sort_values</code> and <code>sort_index()</code></td>
+</tr>
+<tr class="odd">
+<td align="right"><code>select()</code> and <code>rename()</code></td>
+<td align="right"><code>__getitem__</code> and <code>rename()</code></td>
+</tr>
+<tr class="even">
+<td align="right"><code>select()</code></td>
+<td align="right"><code>filter()</code></td>
+</tr>
+<tr class="odd">
+<td align="right"><code>distinct()</code></td>
+<td align="right"><code>drop_duplicates()</code></td>
+</tr>
+<tr class="even">
+<td align="right"><code>mutate()</code></td>
+<td align="right"><code>assign</code></td>
+</tr>
+<tr class="odd">
+<td align="right"><code>summarise()</code></td>
+<td align="right"><code>agg</code></td>
+</tr>
+<tr class="even">
+<td align="right"><code>group_by()</code></td>
+<td align="right"><code>groupby()</code></td>
+</tr>
+<tr class="odd">
+<td align="right"><code>sample_n()</code> and <code>sample_frac()</code></td>
+<td align="right"><code>sample</code></td>
+</tr>
+<tr class="even">
+<td align="right"><code>%&gt;%</code></td>
+<td align="right"><code>pipe[^1]</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="example" class="section level4">
+<h4>Example</h4>
+<table>
+<colgroup>
+<col width="51%" />
+<col width="48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">dplyr</th>
+<th align="right">pandas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right"><code>filter(df, col == 'val')</code></td>
+<td align="right"><code>df.query('col == "val"')</code></td>
+</tr>
+<tr class="even">
+<td align="right"><code>arrange(df, col)</code></td>
+<td align="right"><code>df.sort_values('val')</code></td>
+</tr>
+<tr class="odd">
+<td align="right"><code>rename(df, new_name = old_name)</code></td>
+<td align="right"><code>df.rename(columns = {old_name = new_name})</code></td>
+</tr>
+<tr class="even">
+<td align="right"><code>select(df, col)</code></td>
+<td align="right"><code>df.loc['val']</code></td>
+</tr>
+<tr class="odd">
+<td align="right"><code>distinct(df, col, .keep_all = TRUE)</code></td>
+<td align="right"><code>df[['val']].drop_duplicates()</code></td>
+</tr>
+<tr class="even">
+<td align="right"><code>mutate(new_var = col - col2)</code></td>
+<td align="right"><code>df.assign(new_var = df.col - df.col2)</code></td>
+</tr>
+<tr class="odd">
+<td align="right"><code>summarise(mean = mean(col2), n = count(col1))</code></td>
+<td align="right"><code>df.agg({"col1": "count", "col2", "mean"})</code></td>
+</tr>
+<tr class="even">
+<td align="right"><code>group_by(df, col)</code></td>
+<td align="right"><code>df.groupby('col')</code></td>
+</tr>
+<tr class="odd">
+<td align="right"><code>%&gt;%</code></td>
+<td align="right"><code>pipe[^1]</code></td>
+</tr>
+</tbody>
+</table>
+<p>One of the confusing things are first is that there are many similar functions under different names. I personally find it easier to remember them by the way I write my code. For example, by only using <code>&lt;-</code> as an assignment operator in <code>R</code>, I find it easier to treat the two languages differently.</p>
+</div>
+</div>
+<div id="select" class="section level2">
+<h2><code>select()</code></h2>
+<div id="selecting-columns" class="section level3 tabset tabset-fade tabset-pills">
+<h3>selecting columns</h3>
+<div id="r-2" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>select(df, color, cut)
+
+#or
+
+df %&gt;%
+  select(color, cut)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="r"><code>select(df, color, cut)</code></pre>
+<pre><code>## # A tibble: 53,940 × 2
+##    color cut      
+##    &lt;ord&gt; &lt;ord&gt;    
+##  1 E     Ideal    
+##  2 E     Premium  
+##  3 E     Good     
+##  4 I     Premium  
+##  5 J     Good     
+##  6 J     Very Good
+##  7 I     Very Good
+##  8 H     Very Good
+##  9 E     Fair     
+## 10 H     Very Good
+## # … with 53,930 more rows</code></pre>
+</details>
+</div>
+<div id="python-2" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>df.filter([&#39;color&#39;, &#39;cut&#39;])
+
+#or
+
+df[[&#39;x&#39;, &#39;y&#39;, &#39;z&#39;]]</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="python"><code>df.filter([&#39;color&#39;, &#39;cut&#39;])</code></pre>
+<pre><code>##       color        cut
+## 0         E      Ideal
+## 1         E    Premium
+## 2         E       Good
+## 3         I    Premium
+## 4         J       Good
+## ...     ...        ...
+## 53935     D      Ideal
+## 53936     D       Good
+## 53937     D  Very Good
+## 53938     H    Premium
+## 53939     D      Ideal
+## 
+## [53940 rows x 2 columns]</code></pre>
+</details>
+</div>
+</div>
+<div id="if-we-want-to-select-a-range-of-columns" class="section level3 tabset tabset-fade tabset-pills">
+<h3>If we want to select a range of columns</h3>
+<div id="r-3" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>select(df, x:z)
+
+#or
+
+df %&gt;% select(x:z)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="r"><code>select(df, x:z)</code></pre>
+<pre><code>## # A tibble: 53,940 × 3
+##        x     y     z
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  3.95  3.98  2.43
+##  2  3.89  3.84  2.31
+##  3  4.05  4.07  2.31
+##  4  4.2   4.23  2.63
+##  5  4.34  4.35  2.75
+##  6  3.94  3.96  2.48
+##  7  3.95  3.98  2.47
+##  8  4.07  4.11  2.53
+##  9  3.87  3.78  2.49
+## 10  4     4.05  2.39
+## # … with 53,930 more rows</code></pre>
+</details>
+</div>
+<div id="python-3" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>df.loc[:, &#39;x&#39;:&#39;z&#39;]</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="python"><code>df.loc[:, &#39;x&#39;:&#39;z&#39;]</code></pre>
+<pre><code>##           x     y     z
+## 0      3.95  3.98  2.43
+## 1      3.89  3.84  2.31
+## 2      4.05  4.07  2.31
+## 3      4.20  4.23  2.63
+## 4      4.34  4.35  2.75
+## ...     ...   ...   ...
+## 53935  5.75  5.76  3.50
+## 53936  5.69  5.75  3.61
+## 53937  5.66  5.68  3.56
+## 53938  6.15  6.12  3.74
+## 53939  5.83  5.87  3.64
+## 
+## [53940 rows x 3 columns]</code></pre>
+</details>
+</div>
+</div>
+<div id="if-we-want-to-pipe-it" class="section level3 tabset tabset-fade tabset-pills">
+<h3>If we want to pipe it</h3>
+<div id="r-4" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>df %&gt;% 
+  select(color, cut)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="r"><code>df %&gt;% 
+  select(color, cut)</code></pre>
+<pre><code>## # A tibble: 53,940 × 2
+##    color cut      
+##    &lt;ord&gt; &lt;ord&gt;    
+##  1 E     Ideal    
+##  2 E     Premium  
+##  3 E     Good     
+##  4 I     Premium  
+##  5 J     Good     
+##  6 J     Very Good
+##  7 I     Very Good
+##  8 H     Very Good
+##  9 E     Fair     
+## 10 H     Very Good
+## # … with 53,930 more rows</code></pre>
+</details>
+</div>
+<div id="python-4" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>(df
+.filter([&#39;color&#39;, &#39;cut&#39;])
+)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="python"><code>(df
+.filter([&#39;color&#39;, &#39;cut&#39;])
+)</code></pre>
+<pre><code>##       color        cut
+## 0         E      Ideal
+## 1         E    Premium
+## 2         E       Good
+## 3         I    Premium
+## 4         J       Good
+## ...     ...        ...
+## 53935     D      Ideal
+## 53936     D       Good
+## 53937     D  Very Good
+## 53938     H    Premium
+## 53939     D      Ideal
+## 
+## [53940 rows x 2 columns]</code></pre>
+</details>
+</div>
+</div>
+<div id="if-we-want-to-drop-a-certain-column" class="section level3 tabset tabset-fade tabset-pills">
+<h3>If we want to drop a certain column</h3>
+<div id="r-5" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>select(df, -(x:z))
+
+#or
+
+df %&gt;%
+  select(-(x:z))</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="r"><code>select(df, -(x:z))</code></pre>
+<pre><code>## # A tibble: 53,940 × 7
+##    carat cut       color clarity depth table price
+##    &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+##  1  0.23 Ideal     E     SI2      61.5    55   326
+##  2  0.21 Premium   E     SI1      59.8    61   326
+##  3  0.23 Good      E     VS1      56.9    65   327
+##  4  0.29 Premium   I     VS2      62.4    58   334
+##  5  0.31 Good      J     SI2      63.3    58   335
+##  6  0.24 Very Good J     VVS2     62.8    57   336
+##  7  0.24 Very Good I     VVS1     62.3    57   336
+##  8  0.26 Very Good H     SI1      61.9    55   337
+##  9  0.22 Fair      E     VS2      65.1    61   337
+## 10  0.23 Very Good H     VS1      59.4    61   338
+## # … with 53,930 more rows</code></pre>
+</details>
+</div>
+<div id="python-5" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>(df
+.drop([&#39;x&#39;, &#39;y&#39;, &#39;z&#39;], axis = 1)
+)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="python"><code>(df
+.drop([&#39;x&#39;, &#39;y&#39;, &#39;z&#39;], axis = 1)
+)</code></pre>
+<pre><code>##        carat        cut color clarity  depth  table  price
+## 0       0.23      Ideal     E     SI2   61.5   55.0    326
+## 1       0.21    Premium     E     SI1   59.8   61.0    326
+## 2       0.23       Good     E     VS1   56.9   65.0    327
+## 3       0.29    Premium     I     VS2   62.4   58.0    334
+## 4       0.31       Good     J     SI2   63.3   58.0    335
+## ...      ...        ...   ...     ...    ...    ...    ...
+## 53935   0.72      Ideal     D     SI1   60.8   57.0   2757
+## 53936   0.72       Good     D     SI1   63.1   55.0   2757
+## 53937   0.70  Very Good     D     SI1   62.8   60.0   2757
+## 53938   0.86    Premium     H     SI2   61.0   58.0   2757
+## 53939   0.75      Ideal     D     SI2   62.2   55.0   2757
+## 
+## [53940 rows x 7 columns]</code></pre>
+</details>
+</div>
+</div>
+</div>
+<div id="filter" class="section level2">
+<h2><code>filter()</code></h2>
+<div id="filtering-on-one-condition" class="section level3 tabset tabset-fade tabset-pills">
+<h3>filtering on one condition</h3>
+<div id="r-6" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>filter(df, color == &#39;E&#39;)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="r"><code>filter(df, color == &#39;E&#39;)</code></pre>
+<pre><code>## # A tibble: 9,797 × 10
+##    carat cut       color clarity depth table price     x     y     z
+##    &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43
+##  2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+##  3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31
+##  4  0.22 Fair      E     VS2      65.1    61   337  3.87  3.78  2.49
+##  5  0.2  Premium   E     SI2      60.2    62   345  3.79  3.75  2.27
+##  6  0.32 Premium   E     I1       60.9    58   345  4.38  4.42  2.68
+##  7  0.23 Very Good E     VS2      63.8    55   352  3.85  3.92  2.48
+##  8  0.23 Very Good E     VS1      60.7    59   402  3.97  4.01  2.42
+##  9  0.23 Very Good E     VS1      59.5    58   402  4.01  4.06  2.4 
+## 10  0.23 Good      E     VS1      64.1    59   402  3.83  3.85  2.46
+## # … with 9,787 more rows</code></pre>
+</details>
+</div>
+<div id="python-6" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>(df
+.query(&quot;color == &#39;E&#39;&quot;)
+)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="python"><code>(df
+.query(&quot;color == &#39;E&#39;&quot;)
+)</code></pre>
+<pre><code>##        carat        cut color clarity  depth  table  price     x     y     z
+## 0       0.23      Ideal     E     SI2   61.5   55.0    326  3.95  3.98  2.43
+## 1       0.21    Premium     E     SI1   59.8   61.0    326  3.89  3.84  2.31
+## 2       0.23       Good     E     VS1   56.9   65.0    327  4.05  4.07  2.31
+## 8       0.22       Fair     E     VS2   65.1   61.0    337  3.87  3.78  2.49
+## 14      0.20    Premium     E     SI2   60.2   62.0    345  3.79  3.75  2.27
+## ...      ...        ...   ...     ...    ...    ...    ...   ...   ...   ...
+## 53926   0.71      Ideal     E     SI1   61.9   56.0   2756  5.71  5.73  3.54
+## 53928   0.79    Premium     E     SI2   61.4   58.0   2756  6.03  5.96  3.68
+## 53930   0.71    Premium     E     SI1   60.5   55.0   2756  5.79  5.74  3.49
+## 53932   0.70  Very Good     E     VS2   60.5   59.0   2757  5.71  5.76  3.47
+## 53933   0.70  Very Good     E     VS2   61.2   59.0   2757  5.69  5.72  3.49
+## 
+## [9797 rows x 10 columns]</code></pre>
+</details>
+</div>
+</div>
+<div id="if-we-want-multiple-conditions" class="section level3 tabset tabset-fade tabset-pills">
+<h3>If we want multiple conditions</h3>
+<div id="r-7" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>filter(df, color == &#39;E&#39;, cut == &#39;Good&#39;)
+
+#or
+
+filter(df, color == &#39;E&#39; &amp; cut == &#39;Good&#39;)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="r"><code>filter(df, color == &#39;E&#39;, cut == &#39;Good&#39;)</code></pre>
+<pre><code>## # A tibble: 933 × 10
+##    carat cut   color clarity depth table price     x     y     z
+##    &lt;dbl&gt; &lt;ord&gt; &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  0.23 Good  E     VS1      56.9    65   327  4.05  4.07  2.31
+##  2  0.23 Good  E     VS1      64.1    59   402  3.83  3.85  2.46
+##  3  0.26 Good  E     VVS1     57.9    60   554  4.22  4.25  2.45
+##  4  0.7  Good  E     VS2      57.5    58  2759  5.85  5.9   3.38
+##  5  0.71 Good  E     VS2      59.2    61  2772  5.8   5.88  3.46
+##  6  0.7  Good  E     VS2      64.1    59  2777  5.64  5.59  3.6 
+##  7  0.7  Good  E     VS1      57.2    62  2782  5.81  5.77  3.31
+##  8  0.76 Good  E     SI1      63.7    54  2789  5.76  5.85  3.7 
+##  9  0.7  Good  E     VS2      64.1    55  2793  5.6   5.66  3.61
+## 10  0.73 Good  E     SI1      63.2    58  2796  5.7   5.76  3.62
+## # … with 923 more rows</code></pre>
+</details>
+</div>
+<div id="python-7" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>(df
+.query(&#39;color == &quot;E&quot; &amp; cut == &quot;Good&quot;&#39;)
+)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="python"><code>(df
+.query(&#39;color == &quot;E&quot; &amp; cut == &quot;Good&quot;&#39;)
+)</code></pre>
+<pre><code>##        carat   cut color clarity  depth  table  price     x     y     z
+## 2       0.23  Good     E     VS1   56.9   65.0    327  4.05  4.07  2.31
+## 36      0.23  Good     E     VS1   64.1   59.0    402  3.83  3.85  2.46
+## 84      0.26  Good     E    VVS1   57.9   60.0    554  4.22  4.25  2.45
+## 95      0.70  Good     E     VS2   57.5   58.0   2759  5.85  5.90  3.38
+## 169     0.71  Good     E     VS2   59.2   61.0   2772  5.80  5.88  3.46
+## ...      ...   ...   ...     ...    ...    ...    ...   ...   ...   ...
+## 53695   0.75  Good     E     VS2   59.7   65.0   2717  5.85  5.80  3.48
+## 53739   0.73  Good     E     VS2   63.3   60.0   2723  5.67  5.73  3.61
+## 53741   0.78  Good     E     SI1   57.9   62.0   2723  6.06  6.03  3.50
+## 53785   0.89  Good     E     SI2   64.3   65.0   2728  6.00  5.95  3.84
+## 53890   0.73  Good     E     SI1   57.9   55.0   2749  6.00  5.96  3.46
+## 
+## [933 rows x 10 columns]</code></pre>
+</details>
+</div>
+</div>
+<div id="if-we-want-multiple-conditions-in-one-column" class="section level3 tabset tabset-fade tabset-pills">
+<h3>If we want multiple conditions in one column</h3>
+<div id="r-8" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>df %&gt;% 
+    filter(color %in% c(&#39;E&#39;, &#39;J&#39;))</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="r"><code>df %&gt;% 
+    filter(color %in% c(&#39;E&#39;, &#39;J&#39;))</code></pre>
+<pre><code>## # A tibble: 12,605 × 10
+##    carat cut       color clarity depth table price     x     y     z
+##    &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43
+##  2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+##  3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31
+##  4  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75
+##  5  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48
+##  6  0.22 Fair      E     VS2      65.1    61   337  3.87  3.78  2.49
+##  7  0.3  Good      J     SI1      64      55   339  4.25  4.28  2.73
+##  8  0.23 Ideal     J     VS1      62.8    56   340  3.93  3.9   2.46
+##  9  0.31 Ideal     J     SI2      62.2    54   344  4.35  4.37  2.71
+## 10  0.2  Premium   E     SI2      60.2    62   345  3.79  3.75  2.27
+## # … with 12,595 more rows</code></pre>
+</details>
+</div>
+<div id="python-8" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>(df
+.query(&#39;color in [&quot;E&quot;, &quot;J&quot;]&#39;)
+)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="python"><code>(df
+.query(&#39;color in [&quot;E&quot;, &quot;J&quot;]&#39;)
+)</code></pre>
+<pre><code>##        carat        cut color clarity  depth  table  price     x     y     z
+## 0       0.23      Ideal     E     SI2   61.5   55.0    326  3.95  3.98  2.43
+## 1       0.21    Premium     E     SI1   59.8   61.0    326  3.89  3.84  2.31
+## 2       0.23       Good     E     VS1   56.9   65.0    327  4.05  4.07  2.31
+## 4       0.31       Good     J     SI2   63.3   58.0    335  4.34  4.35  2.75
+## 5       0.24  Very Good     J    VVS2   62.8   57.0    336  3.94  3.96  2.48
+## ...      ...        ...   ...     ...    ...    ...    ...   ...   ...   ...
+## 53926   0.71      Ideal     E     SI1   61.9   56.0   2756  5.71  5.73  3.54
+## 53928   0.79    Premium     E     SI2   61.4   58.0   2756  6.03  5.96  3.68
+## 53930   0.71    Premium     E     SI1   60.5   55.0   2756  5.79  5.74  3.49
+## 53932   0.70  Very Good     E     VS2   60.5   59.0   2757  5.71  5.76  3.47
+## 53933   0.70  Very Good     E     VS2   61.2   59.0   2757  5.69  5.72  3.49
+## 
+## [12605 rows x 10 columns]</code></pre>
+</details>
+</div>
+</div>
+<div id="count-missing-values" class="section level3 tabset tabset-fade tabset-pills">
+<h3>Count Missing Values</h3>
+<div id="r-9" class="section level4">
+<h4>R</h4>
+<pre class="r"><code># sum of missing values in each column
+df %&gt;% 
+  summarise(across(everything(), ~sum(is.na(.))))
+
+purrr::map_df(df, ~sum(is.na(.)))</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="r"><code>purrr::map_df(df, ~sum(is.na(.)))</code></pre>
+<pre><code>## # A tibble: 1 × 10
+##   carat   cut color clarity depth table price     x     y     z
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1     0     0     0       0     0     0     0     0     0     0</code></pre>
+</details>
+</div>
+<div id="python-9" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>df.isna().sum()</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="python"><code>df.isna().sum()</code></pre>
+<pre><code>## carat      0
+## cut        0
+## color      0
+## clarity    0
+## depth      0
+## table      0
+## price      0
+## x          0
+## y          0
+## z          0
+## dtype: int64</code></pre>
+</details>
+</div>
+</div>
+<div id="count-unique-values-in-each-column" class="section level3 tabset tabset-fade tabset-pills">
+<h3>Count Unique Values in Each Column</h3>
+<div id="r-10" class="section level4">
+<h4>R</h4>
+<pre class="r"><code># getting the count of unique values in each column 
+df %&gt;% 
+  summarise(across(everything(), n_distinct))
+
+#can also map across for the same result
+purrr::map_df(df, ~sum(n_distinct(.)))
+
+# if you just want numerical columns
+df %&gt;% 
+  summarise(across(where(is.numeric), n_distinct))</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="r"><code>purrr::map_df(df, ~sum(n_distinct(.)))</code></pre>
+<pre><code>## # A tibble: 1 × 10
+##   carat   cut color clarity depth table price     x     y     z
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1   273     5     7       8   184   127 11602   554   552   375</code></pre>
+</details>
+</div>
+<div id="python-10" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>df.nunique()
+
+# If you want unique values in numeric columns
+df.select_dtypes(include = np.number).nunique()
+#or
+df.select_dtypes(&#39;number&#39;).nunique()
+
+# If you just want the column names of numeric type
+df.select_dtypes(&#39;number&#39;).columns
+# If you want them as a list
+df.select_dtypes(include = np.number).columns.tolist()
+
+# count and unique values
+df.agg([&#39;count&#39;, &#39;size&#39;, &#39;nunique&#39;])
+
+#for the proportions
+df.select_dtypes(include = np.number).value_counts(normalize = True)
+#or
+df.select_dtypes(&#39;number&#39;).value_counts(normalize = True)</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="python"><code>(df
+.select_dtypes(include = np.number)
+.nunique()
+)</code></pre>
+<pre><code>## carat      273
+## depth      184
+## table      127
+## price    11602
+## x          554
+## y          552
+## z          375
+## dtype: int64</code></pre>
+</details>
+</div>
+</div>
+<div id="complex-pipings" class="section level3 tabset tabset-fade tabset-pills">
+<h3>Complex Pipings</h3>
+<div id="r-11" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>df %&gt;%
+  select(starts_with(&#39;c&#39;)) %&gt;%
+  filter(cut %in% c(&#39;Ideal&#39;, &#39;Premium&#39;)) %&gt;%
+  group_by(cut, color, clarity) %&gt;%
+  summarise(
+    avgcarat = mean(carat, na.rm=TRUE),
+    n = n()
+    ) %&gt;%
+  arrange(-avgcarat) %&gt;% #desc(avgcarat) also works
+  head()</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="r"><code>df %&gt;%
+  select(starts_with(&#39;c&#39;)) %&gt;%
+  filter(cut %in% c(&#39;Ideal&#39;, &#39;Premium&#39;)) %&gt;%
+  group_by(cut, color, clarity) %&gt;%
+  summarise(
+    avgcarat = mean(carat, na.rm=TRUE),
+    n = n()
+    ) %&gt;%
+  arrange(-avgcarat) %&gt;% #desc(avgcarat) also works
+  head()</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;cut&#39;, &#39;color&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 6 × 5
+## # Groups:   cut, color [4]
+##   cut     color clarity avgcarat     n
+##   &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;      &lt;dbl&gt; &lt;int&gt;
+## 1 Ideal   J     I1          1.99     2
+## 2 Premium I     I1          1.61    24
+## 3 Premium J     I1          1.58    13
+## 4 Premium J     SI2         1.55   161
+## 5 Ideal   H     I1          1.48    38
+## 6 Premium I     SI2         1.42   312</code></pre>
+</details>
+</div>
+<div id="python-11" class="section level4">
+<h4>Python</h4>
+<pre class="python"><code>(df
+ .filter(regex = &#39;^c&#39;)
+ .query(&#39;cut in [&quot;Ideal&quot;, &quot;Premium&quot;]&#39;)
+ .groupby([&#39;cut&#39;, &#39;color&#39;, &#39;clarity&#39;])
+ .agg([&#39;mean&#39;, &#39;size&#39;])
+ .sort_values(by = (&#39;carat&#39;, &#39;mean&#39;), ascending = False)
+ .head())</code></pre>
+<details>
+<summary>
+View Output
+</summary>
+<pre class="python"><code>(df
+ .filter(regex = &#39;^c&#39;)
+ .query(&#39;cut in [&quot;Ideal&quot;, &quot;Premium&quot;]&#39;)
+ .groupby([&#39;cut&#39;, &#39;color&#39;, &#39;clarity&#39;])
+ .agg([&#39;mean&#39;, &#39;size&#39;])
+ .sort_values(by = (&#39;carat&#39;, &#39;mean&#39;), ascending = False)
+ .head())</code></pre>
+<pre><code>##                           carat     
+##                            mean size
+## cut     color clarity               
+## Ideal   J     I1       1.990000    2
+## Premium I     I1       1.605833   24
+##         J     I1       1.578462   13
+##               SI2      1.554534  161
+## Ideal   H     I1       1.475526   38</code></pre>
+</details>
+</div>
+</div>
+<div id="more-examples" class="section level3 tabset tabset-fade tabset-pills">
+<h3>More Examples</h3>
+<div id="transforming" class="section level4">
+<h4>Transforming</h4>
+<table>
+<colgroup>
+<col width="38%" />
+<col width="61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>R</th>
+<th>pandas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>select(df, col_one = col1)</code></td>
+<td><code>df.rename(columns = {'col1': 'col_one'})['col_one']</code></td>
+</tr>
+<tr class="even">
+<td><code>rename(df, col_one = col1)[^2]</code></td>
+<td><code>df.rename(columns = {'col1': 'col_one'})</code></td>
+</tr>
+<tr class="odd">
+<td><code>mutate(df, c = a - b)</code></td>
+<td><code>df.assign(c = df['a'] - df['b'])</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="sorting" class="section level4">
+<h4>Sorting</h4>
+<table>
+<thead>
+<tr class="header">
+<th>R</th>
+<th>pandas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>arrange(df, col1, col2)</code></td>
+<td><code>df.sort_values(['col1', 'col2'])</code></td>
+</tr>
+<tr class="even">
+<td><code>arrange(df, desc(col1))[^3]</code></td>
+<td><code>df.sort_values('col1', ascending = False)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="grouping-and-summarising" class="section level4">
+<h4>Grouping and Summarising</h4>
+<table>
+<colgroup>
+<col width="60%" />
+<col width="39%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>R</th>
+<th>pandas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>summary(df)</code></td>
+<td><code>df.describe()</code></td>
+</tr>
+<tr class="even">
+<td><code>group_by(df, col1)</code></td>
+<td><code>df.groupby('col1')</code></td>
+</tr>
+<tr class="odd">
+<td><code>group_by(df, col1) %&gt;% summarise(avg = mean(col1, na.rm = TRUE))</code></td>
+<td><code>df.groupby('col1').agg({'col1' : 'mean'})</code></td>
+</tr>
+<tr class="even">
+<td><code>group_by(df, col1) %&gt;% summarise(total = sum(col1))</code></td>
+<td><code>df.groupby('col1').sum()</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
