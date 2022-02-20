@@ -34,4 +34,4 @@ bio: I am interested in research, sport and statistics.
 
 I am studying my Masters of Data Science at Western Sydney University. My undergraduate degree is in Psychology so I am learning a lot of new topics in mathematics and computer science. I will post things that interest me.
 
-My posts here are my own opinion and not represenative of any organisation that I am associated with. 
+My posts here are my own opinion and not representative of any organisation that I am associated with. 
