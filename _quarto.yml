@@ -3,11 +3,18 @@ project:
 
 website:
   title: "Justyn"
+  repo-url: "https://github.com/becausejustyn/blog"
   description: "This is my personal blog."
   navbar:
+    title: false
+    background: primary
+    search: true
+    left:
+      - text: "{{< fa house-user >}} Home"
+        href: index.qmd
+      - text: "{{< fa newspaper >}} Blog"
+        href: blog.qmd
     right:
-      - text: Blog
-        href: blog.qmd 
       - icon: github
         href: https://github.com/becausejustyn
       - icon: twitter
@@ -18,8 +25,9 @@ website:
     creator: "@becausejustyn"
 format:
   html:
-    theme: cosmo
-    css: styles.css
+    theme:
+      light: [flatly, custom.scss]
+      dark: [darkly, custom-dark.scss]
 
 
 

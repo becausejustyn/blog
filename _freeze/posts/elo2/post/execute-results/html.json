@@ -1,0 +1,14 @@
+{
+  "hash": "5949bd7b42cec37d6e1753ccbbe941c4",
+  "result": {
+    "markdown": "---\ntitle: \"Elo II\"\ndate: \"2023-06-10\"\ncategories: ['R', 'NFL', 'Python']\nexecute: \n  freeze: true\n  eval: true\nformat:\n  html:\n    highlight: true\n    code-fold: show\n    code-tools: true\n    highlight-style: github\n---\n\n\nIn the previous post I covered the basics of Elo, so today I will walk through how to calculate Elo using the basic approach. \n\n\n::: {.cell}\n\n```{.r .cell-code}\n# '../data/games.csv'\n```\n:::\n\n\n## First\n\n::: {.panel-tabset}\n\n## R\n\n\n::: {.cell}\n\n```{.r .cell-code}\ncalculate_expected_outcome <- function(elo_a, elo_b, scaling_factor = 400) {\n  return (1 / (1 + 10^((elo_b - elo_a) / scaling_factor)))\n}\n```\n:::\n\n\n## Python\n\n\n::: {.cell}\n\n```{.python .cell-code}\ndef calculate_expected_outcome(team_a, team_b, scaling_factor = 400):\n    return 1 / (1 + 10 ** ((team_b - team_a) / scaling_factor))\n```\n:::\n\n\n\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
